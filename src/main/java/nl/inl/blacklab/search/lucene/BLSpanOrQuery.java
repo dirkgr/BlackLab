@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 
 import nl.inl.blacklab.search.Span;
 
@@ -264,6 +265,8 @@ public class BLSpanOrQuery extends SpanQuery implements Cloneable {
 
 				boolean skipCalled = false;
 				while (queue.size() != 0 && top().doc() < target) {
+					if (Thread.interrupted())
+						throw new CancellationException();
 					if (top().skipTo(target)) {
 						queue.updateTop();
 					} else {

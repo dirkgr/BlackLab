@@ -17,6 +17,7 @@ package nl.inl.blacklab.search.lucene;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.concurrent.CancellationException;
 
 import nl.inl.blacklab.search.Span;
 
@@ -83,6 +84,8 @@ public class SpansAndNot extends BLSpans {
 		boolean done = false;
 		int newDocId = -1;
 		do {
+			if (Thread.interrupted())
+				throw new CancellationException();
 			if (moreIncludeSpans && includeSpans.next()) {
 				// Voldoet deze?
 				newDocId = includeSpans.doc();

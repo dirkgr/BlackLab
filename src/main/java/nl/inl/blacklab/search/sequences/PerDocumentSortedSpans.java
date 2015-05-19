@@ -18,6 +18,7 @@ package nl.inl.blacklab.search.sequences;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.concurrent.CancellationException;
 
 import nl.inl.blacklab.search.Hit;
 import nl.inl.blacklab.search.Span;
@@ -92,6 +93,8 @@ public class PerDocumentSortedSpans extends BLSpans {
 	@Override
 	public boolean next() throws IOException {
 		do {
+			if (Thread.interrupted())
+				throw new CancellationException();
 			if (indexInBucket >= 0) {
 				prevStart = bucketedSpans.start(indexInBucket);
 				prevEnd = bucketedSpans.end(indexInBucket);

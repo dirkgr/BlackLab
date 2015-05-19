@@ -16,6 +16,7 @@
 package nl.inl.blacklab.search.lucene;
 
 import java.io.IOException;
+import java.util.concurrent.CancellationException;
 
 import nl.inl.blacklab.search.Span;
 
@@ -61,6 +62,8 @@ public class SpansUnique extends BLSpans {
 		if (!more)
 			return false;
 		do {
+			if (Thread.interrupted())
+				throw new CancellationException();
 			if (nexted) {
 				// Save previous hit
 				prevDoc = src.doc();

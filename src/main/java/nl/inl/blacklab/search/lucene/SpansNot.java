@@ -16,6 +16,7 @@
 package nl.inl.blacklab.search.lucene;
 
 import java.io.IOException;
+import java.util.concurrent.CancellationException;
 
 import nl.inl.blacklab.search.Span;
 
@@ -138,6 +139,8 @@ class SpansNot extends BLSpans {
 
 		boolean foundValidToken = false;
 		while (!foundValidToken) {
+			if (Thread.interrupted())
+				throw new CancellationException();
 
 			// Which of 3 situations are we in?
 			if (currentDoc < 0) {

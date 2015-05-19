@@ -17,6 +17,7 @@ package nl.inl.blacklab.search.lucene;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.concurrent.CancellationException;
 
 import org.apache.lucene.search.spans.Spans;
 
@@ -36,6 +37,8 @@ public abstract class SpansAbstract extends Spans {
 		do {
 			if (!next())
 				return false;
+			if (Thread.interrupted())
+				throw new CancellationException();
 		} while (target > doc());
 		return true;
 	}
